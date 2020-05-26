@@ -1,14 +1,17 @@
 package com.example.maps;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -52,10 +55,10 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Googl
         MapsInitializer.initialize(getActivity().getApplicationContext());
         mMapView.getMapAsync(this);
 
-        view.findViewById(R.id.refreshFAB).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.refreshFAB).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //update anchors
+                Navigation.findNavController(getView()).navigate(R.id.action_FirstFragment_self);
             }
         });
     }
