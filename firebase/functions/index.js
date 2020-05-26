@@ -3,36 +3,64 @@ const iot = require('@google-cloud/iot')
 const admin = require('firebase-admin')
 const request = require('request')
 const {PubSub} = require('@google-cloud/pubsub');
+const { firestore } = require('firebase-admin');
 const iotClient = new  iot.v1.DeviceManagerClient()
 admin.initializeApp()
 
 
 exports.deployDevice = functions.https.onCall((data,context)=>{
   const deviceId = data.deviceId
+  const installerId = context.auth.uid
   const db = admin.firestore()
-  return db.collection('devices').doc(deviceId).get()
-  .then(document => {
-    if(document.get('deploymentStatus') == 0) {
-      if(document.get('online') == 1) {
-        const adminId = document.get('adminId')
-        return db.collection('admins').doc(adminId).get()    
-      }
-    }
+  return db.collection('devices').doc(deviceId).update({
+    deploymentStatus: 1
+  })
+  .then(v => {
+    return db.collection('installers').doc(installerId).get()
   })
   .then(v=>{
-    if(v == null) return
-    return db.collection('devices').doc(deviceId).update({
-      deploymentStatus: 1
+    const adminId = v.get('adminId')
+    return db.collection('admins').doc(adminId).update({
+      devices: firestore.FieldValue.arrayUnion(deviceId)
     })
   })
   .then(y =>{
     return '1'
   })
-  .catch(err=> console.log(err))
+  .catch(err=> {
+    console.log(err)
+    return db.collection('devices').doc(deviceId).update({
+      deploymentStatus: 0
+    })
+    .then(v=>{
+      return '0'
+    })
+  })
 })
 
 exports.removeDevice = functions.https.onCall((data,context)=>{
-  return '1'
+  const deviceId = data.deviceId
+  const installerId = context.auth.uid
+  const db = admin.firestore()
+  return db.collection('installers').doc(installerId).get()
+  .then(doc=>{
+    const adminId = doc.get('adminId')
+    return db.collection('admins').doc(adminId).update({
+      devices: firestore.FieldValue.arrayRemove(deviceId)
+    })
+  })
+  .then(v=>{
+    return db.collection('devices').doc(deviceId).update({
+      deploymentStatus: 0
+    })
+  })
+  .then(v =>{
+    return '1'
+  })
+  .catch(err =>{
+    console.log(err)
+    return '0'
+  })
 })
 
 exports.commitDeviceOtaUpdate = functions.pubsub.topic('confirm_ota_update').onPublish((msg,context)=>{
