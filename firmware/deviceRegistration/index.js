@@ -27,7 +27,7 @@ let p = axios.post(url)
         online: 0
     })
 }).then(doc => {
-    exec(`mos config-set device.id=${doc.id}`,(err,stdout,stderr)=>{
+    exec(`mos config-set device.id=D${doc.id}`,(err,stdout,stderr)=>{
         if(err) {
             console.log(err)
             return
@@ -36,7 +36,7 @@ let p = axios.post(url)
     })
     return doc
 }).then(doc => {
-    console.log(`deviceId: ${doc.id}`)
+    console.log(`deviceId: D${doc.id}`)
 }).catch(err => {
     console.log(err)
 })
