@@ -50,7 +50,7 @@ exports.deleteDevice = functions.pubsub.topic('delete_device_topic').onPublish((
   .then(document=>{
     const token = 'rt90vnkss4vQ2mzHTWzCmAA'
     const mdashId = document.get('mdashId')
-    const URL = `https://mdash.net/api/v2/devices/${mdashId}/rpc/Sys.Reboot?access_token=${token}`
+    const URL = `https://mdash.net/api/v2/devices/${mdashId}?access_token=${token}`
     request.delete(URL,function (error,response,body) {
       console.log('error:', error); // Print the error if one occurred 
       console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
