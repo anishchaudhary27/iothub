@@ -15,6 +15,7 @@ Timer.set(10000 /* milliseconds */, Timer.REPEAT, function() {
   }
 }, null);
 
+GPIO.set_mode(2,GPIO.MODE_OUTPUT);
 
 MQTT.sub(topics, function(conn, topic, msg) {
   print('Topic:', topic, 'message:', msg);

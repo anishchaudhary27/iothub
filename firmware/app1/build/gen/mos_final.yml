@@ -1533,6 +1533,25 @@ config_schema:
   - iot.eclipse.org:1883
 - - i2c.enable
   - true
+- - fw
+  - o
+  - title: My app custom settings
+- - fw.state
+  - i
+  - 0
+  - title: device state
+- - fw.mode
+  - i
+  - 0
+  - title: device mode
+- - fw.dirty
+  - i
+  - 0
+  - title: device fw state
+- - fw.version
+  - i
+  - 1
+  - title: deice fw version
 build_vars:
   BOARD: ""
   ESP_IDF_EXTRA_COMPONENTS: ' bt'

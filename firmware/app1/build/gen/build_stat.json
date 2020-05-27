@@ -2,5 +2,5 @@
   "arch": "esp32",
   "platform": "esp32",
   "app_name": "app1",
-  "build_time_ms": 72846
+  "build_time_ms": 96981
 }

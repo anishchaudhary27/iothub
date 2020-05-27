@@ -10,8 +10,8 @@
 
 #include "mgos_config_util.h"
 
-const struct mgos_conf_entry mgos_config_schema_[401] = {
-  {.type = CONF_TYPE_OBJECT, .key = "", .offset = 0, .num_desc = 400},
+const struct mgos_conf_entry mgos_config_schema_[406] = {
+  {.type = CONF_TYPE_OBJECT, .key = "", .offset = 0, .num_desc = 405},
   {.type = CONF_TYPE_OBJECT, .key = "debug", .offset = offsetof(struct mgos_config, debug), .num_desc = 12},
   {.type = CONF_TYPE_STRING, .key = "udp_log_addr", .offset = offsetof(struct mgos_config, debug.udp_log_addr)},
   {.type = CONF_TYPE_INT, .key = "udp_log_level", .offset = offsetof(struct mgos_config, debug.udp_log_level)},
@@ -412,6 +412,11 @@ const struct mgos_conf_entry mgos_config_schema_[401] = {
   {.type = CONF_TYPE_OBJECT, .key = "btn3", .offset = offsetof(struct mgos_config, board.btn3), .num_desc = 2},
   {.type = CONF_TYPE_INT, .key = "pin", .offset = offsetof(struct mgos_config, board.btn3.pin)},
   {.type = CONF_TYPE_BOOL, .key = "pull_up", .offset = offsetof(struct mgos_config, board.btn3.pull_up)},
+  {.type = CONF_TYPE_OBJECT, .key = "fw", .offset = offsetof(struct mgos_config, fw), .num_desc = 4},
+  {.type = CONF_TYPE_INT, .key = "state", .offset = offsetof(struct mgos_config, fw.state)},
+  {.type = CONF_TYPE_INT, .key = "mode", .offset = offsetof(struct mgos_config, fw.mode)},
+  {.type = CONF_TYPE_INT, .key = "dirty", .offset = offsetof(struct mgos_config, fw.dirty)},
+  {.type = CONF_TYPE_INT, .key = "version", .offset = offsetof(struct mgos_config, fw.version)},
 };
 
 const struct mgos_conf_entry *mgos_config_schema() {
@@ -764,6 +769,10 @@ const struct mgos_config mgos_config_defaults = {
   .board.btn2.pull_up = 0,
   .board.btn3.pin = -1,
   .board.btn3.pull_up = 0,
+  .fw.state = 0,
+  .fw.mode = 0,
+  .fw.dirty = 0,
+  .fw.version = 1,
 };
 
 /* debug */
@@ -5229,6 +5238,65 @@ int mgos_config_get_board_btn3_pull_up(struct mgos_config *cfg) {
 }
 void mgos_config_set_board_btn3_pull_up(struct mgos_config *cfg, int v) {
   cfg->board.btn3.pull_up = v;
+}
+
+/* fw */
+#define MGOS_CONFIG_HAVE_FW
+#define MGOS_SYS_CONFIG_HAVE_FW
+const struct mgos_config_fw * mgos_config_get_fw(struct mgos_config *cfg) {
+  return &cfg->fw;
+}
+const struct mgos_conf_entry *mgos_config_schema_fw(void) {
+  return mgos_conf_find_schema_entry("fw", mgos_config_schema());
+}
+bool mgos_config_parse_fw(struct mg_str json, struct mgos_config_fw *cfg) {
+  return mgos_conf_parse_sub(json, mgos_config_schema(), cfg);
+}
+bool mgos_config_copy_fw(const struct mgos_config_fw *src, struct mgos_config_fw *dst) {
+  return mgos_conf_copy(mgos_config_schema_fw(), src, dst);
+}
+void mgos_config_free_fw(struct mgos_config_fw *cfg) {
+  return mgos_conf_free(mgos_config_schema_fw(), cfg);
+}
+
+/* fw.state */
+#define MGOS_CONFIG_HAVE_FW_STATE
+#define MGOS_SYS_CONFIG_HAVE_FW_STATE
+int mgos_config_get_fw_state(struct mgos_config *cfg) {
+  return cfg->fw.state;
+}
+void mgos_config_set_fw_state(struct mgos_config *cfg, int v) {
+  cfg->fw.state = v;
+}
+
+/* fw.mode */
+#define MGOS_CONFIG_HAVE_FW_MODE
+#define MGOS_SYS_CONFIG_HAVE_FW_MODE
+int mgos_config_get_fw_mode(struct mgos_config *cfg) {
+  return cfg->fw.mode;
+}
+void mgos_config_set_fw_mode(struct mgos_config *cfg, int v) {
+  cfg->fw.mode = v;
+}
+
+/* fw.dirty */
+#define MGOS_CONFIG_HAVE_FW_DIRTY
+#define MGOS_SYS_CONFIG_HAVE_FW_DIRTY
+int mgos_config_get_fw_dirty(struct mgos_config *cfg) {
+  return cfg->fw.dirty;
+}
+void mgos_config_set_fw_dirty(struct mgos_config *cfg, int v) {
+  cfg->fw.dirty = v;
+}
+
+/* fw.version */
+#define MGOS_CONFIG_HAVE_FW_VERSION
+#define MGOS_SYS_CONFIG_HAVE_FW_VERSION
+int mgos_config_get_fw_version(struct mgos_config *cfg) {
+  return cfg->fw.version;
+}
+void mgos_config_set_fw_version(struct mgos_config *cfg, int v) {
+  cfg->fw.version = v;
 }
 bool mgos_sys_config_get(const struct mg_str key, struct mg_str *value) {
   return mgos_config_get(key, value, &mgos_sys_config, mgos_config_schema());

@@ -398,5 +398,10 @@
   ["board.btn2.pull_up", "b", {"title": "True if button is pulled up when inactive"}],
   ["board.btn3", "o", {}],
   ["board.btn3.pin", "i", {"title": "Button GPIO pin"}],
-  ["board.btn3.pull_up", "b", {"title": "True if button is pulled up when inactive"}]
+  ["board.btn3.pull_up", "b", {"title": "True if button is pulled up when inactive"}],
+  ["fw", "o", {"title": "My app custom settings"}],
+  ["fw.state", "i", {"title": "device state"}],
+  ["fw.mode", "i", {"title": "device mode"}],
+  ["fw.dirty", "i", {"title": "device fw state"}],
+  ["fw.version", "i", {"title": "deice fw version"}]
 ]

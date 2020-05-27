@@ -487,6 +487,13 @@ struct mgos_config_board {
   struct mgos_config_board_btn3 btn3;
 };
 
+struct mgos_config_fw {
+  int state;
+  int mode;
+  int dirty;
+  int version;
+};
+
 struct mgos_config {
   struct mgos_config_debug debug;
   struct mgos_config_sys sys;
@@ -516,6 +523,7 @@ struct mgos_config {
   struct mgos_config_watson watson;
   struct mgos_config_mjs mjs;
   struct mgos_config_board board;
+  struct mgos_config_fw fw;
 };
 
 
@@ -3821,6 +3829,48 @@ int mgos_config_get_board_btn3_pull_up(struct mgos_config *cfg);
 static inline int mgos_sys_config_get_board_btn3_pull_up(void) { return mgos_config_get_board_btn3_pull_up(&mgos_sys_config); }
 void mgos_config_set_board_btn3_pull_up(struct mgos_config *cfg, int v);
 static inline void mgos_sys_config_set_board_btn3_pull_up(int v) { mgos_config_set_board_btn3_pull_up(&mgos_sys_config, v); }
+
+/* fw */
+#define MGOS_CONFIG_HAVE_FW
+#define MGOS_SYS_CONFIG_HAVE_FW
+const struct mgos_config_fw * mgos_config_get_fw(struct mgos_config *cfg);
+static inline const struct mgos_config_fw * mgos_sys_config_get_fw(void) { return mgos_config_get_fw(&mgos_sys_config); }
+const struct mgos_conf_entry *mgos_config_schema_fw(void);
+bool mgos_config_parse_fw(struct mg_str json, struct mgos_config_fw *cfg);
+bool mgos_config_copy_fw(const struct mgos_config_fw *src, struct mgos_config_fw *dst);
+void mgos_config_free_fw(struct mgos_config_fw *cfg);
+
+/* fw.state */
+#define MGOS_CONFIG_HAVE_FW_STATE
+#define MGOS_SYS_CONFIG_HAVE_FW_STATE
+int mgos_config_get_fw_state(struct mgos_config *cfg);
+static inline int mgos_sys_config_get_fw_state(void) { return mgos_config_get_fw_state(&mgos_sys_config); }
+void mgos_config_set_fw_state(struct mgos_config *cfg, int v);
+static inline void mgos_sys_config_set_fw_state(int v) { mgos_config_set_fw_state(&mgos_sys_config, v); }
+
+/* fw.mode */
+#define MGOS_CONFIG_HAVE_FW_MODE
+#define MGOS_SYS_CONFIG_HAVE_FW_MODE
+int mgos_config_get_fw_mode(struct mgos_config *cfg);
+static inline int mgos_sys_config_get_fw_mode(void) { return mgos_config_get_fw_mode(&mgos_sys_config); }
+void mgos_config_set_fw_mode(struct mgos_config *cfg, int v);
+static inline void mgos_sys_config_set_fw_mode(int v) { mgos_config_set_fw_mode(&mgos_sys_config, v); }
+
+/* fw.dirty */
+#define MGOS_CONFIG_HAVE_FW_DIRTY
+#define MGOS_SYS_CONFIG_HAVE_FW_DIRTY
+int mgos_config_get_fw_dirty(struct mgos_config *cfg);
+static inline int mgos_sys_config_get_fw_dirty(void) { return mgos_config_get_fw_dirty(&mgos_sys_config); }
+void mgos_config_set_fw_dirty(struct mgos_config *cfg, int v);
+static inline void mgos_sys_config_set_fw_dirty(int v) { mgos_config_set_fw_dirty(&mgos_sys_config, v); }
+
+/* fw.version */
+#define MGOS_CONFIG_HAVE_FW_VERSION
+#define MGOS_SYS_CONFIG_HAVE_FW_VERSION
+int mgos_config_get_fw_version(struct mgos_config *cfg);
+static inline int mgos_sys_config_get_fw_version(void) { return mgos_config_get_fw_version(&mgos_sys_config); }
+void mgos_config_set_fw_version(struct mgos_config *cfg, int v);
+static inline void mgos_sys_config_set_fw_version(int v) { mgos_config_set_fw_version(&mgos_sys_config, v); }
 
 bool mgos_sys_config_get(const struct mg_str key, struct mg_str *value);
 bool mgos_sys_config_set(const struct mg_str key, const struct mg_str value, bool free_strings);

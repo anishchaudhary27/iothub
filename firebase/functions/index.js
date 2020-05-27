@@ -42,7 +42,8 @@ exports.onUserAdded = functions.auth.user().onCreate((user,context)=>{
   else {
     return db.collection('admins').doc(uid).set({
       active: 1,
-      name:name
+      name:name,
+      devices:[]
     })
   }
 })
