@@ -8,6 +8,46 @@ const iotClient = new  iot.v1.DeviceManagerClient()
 admin.initializeApp()
 
 
+exports.onUserDeleted = functions.auth.user().onDelete((user,context)=>{
+  const uid = user.uid
+  const email = user.email
+  const db = admin.firestore()
+  if(email.endsWith('installer.com')) {
+    return db.collection('installers').doc(uid).update({
+      adminId : '',
+      acitve:0
+    })
+  }
+  else {
+    return db.collection('admins').doc(uid).update({
+      active: 0
+    })
+  }
+  
+})
+
+
+exports.onUserAdded = functions.auth.user().onCreate((user,context)=>{
+  const uid = user.uid
+  const email = user.email
+  const name  = email.split('@')[0]
+  const db = admin.firestore()
+  if(email.endsWith('installer.com')) {
+    return db.collection('installers').doc(uid).set({
+      adminId : '',
+      acitve:1,
+      name: name
+    })
+  }
+  else {
+    return db.collection('admins').doc(uid).set({
+      active: 1,
+      name:name
+    })
+  }
+})
+
+
 exports.requestDeviceDeletion = functions.https.onCall((data,context)=>{
   const deviceId = data.deviceId
   const pubsub = new PubSub()
