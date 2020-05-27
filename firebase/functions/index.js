@@ -7,6 +7,23 @@ const { firestore } = require('firebase-admin');
 const iotClient = new  iot.v1.DeviceManagerClient()
 admin.initializeApp()
 
+
+exports.requestDeviceDeletion = functions.https.onCall((data,context)=>{
+  const deviceId = data.deviceId
+  const pubsub = new PubSub()
+  const dataBuffer = Buffer.from(JSON.stringify({
+    deviceId: deviceId
+  }));
+  return pubsub.topic('delete_device_topic').publish(dataBuffer)
+  .then((v)=>{
+    return '1'
+  })
+  .catch((err)=>{
+    console.log(err)
+    return '0'
+  })
+})
+
 exports.deleteDevice = functions.pubsub.topic('delete_device_topic').onPublish((msg,context)=>{
   const data = msg.json
   const deviceId = data.deviceId
@@ -25,6 +42,19 @@ exports.deleteDevice = functions.pubsub.topic('delete_device_topic').onPublish((
     return db.collection('devices').doc(deviceId).update({
       deploymentStatus: 0,
       active:0
+    })
+  })
+  .then(v=>{
+    return db.collection('devices').doc(deviceId).get()
+  })
+  .then(document=>{
+    const token = 'rt90vnkss4vQ2mzHTWzCmAA'
+    const mdashId = document.get('mdashId')
+    const URL = `https://mdash.net/api/v2/devices/${mdashId}/rpc/Sys.Reboot?access_token=${token}`
+    request.delete(URL,function (error,response,body) {
+      console.log('error:', error); // Print the error if one occurred 
+      console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
+      console.log('body:', body);
     })
   })
   .catch(err=>{
