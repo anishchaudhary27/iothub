@@ -7,6 +7,31 @@ const { firestore } = require('firebase-admin');
 const iotClient = new  iot.v1.DeviceManagerClient()
 admin.initializeApp()
 
+exports.deleteDevice = functions.pubsub.topic('delete_device_topic').onPublish((msg,context)=>{
+  const data = msg.json
+  const deviceId = data.deviceId
+  const db = admin.firestore()
+  return db.collection('devices').doc(deviceId).get()
+  .then(doc=>{
+    const registryId = doc.get('registryId')
+    const cloudRegion = doc.get('cloudRegion')
+    const formattedName = `projects/iot-hub-273405/locations/${cloudRegion}/registries/${registryId}/devices/D${deviceId}`
+    const request = {
+      name: formattedName
+    };
+    return iotClient.deleteDevice(request)
+  })
+  .then(v=>{
+    return db.collection('devices').doc(deviceId).update({
+      deploymentStatus: 0,
+      active:0
+    })
+  })
+  .catch(err=>{
+    console.log(err)
+  })
+})
+
 
 exports.deployDevice = functions.https.onCall((data,context)=>{
   const deviceId = data.deviceId
