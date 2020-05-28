@@ -2,7 +2,7 @@ const { exec } = require("child_process");
 const { stderr, stdout } = require("process");
 const { Console } = require("console");
 
-const deviceId = '2xStqbeF6jC3eCZ878ZP'
+const deviceId = '0NGtsncIHyPM07ysCCZj'
 const projectId = 'iot-hub-273405'
 const regionId = 'us-central1'
 const registryId = 'registery_1'

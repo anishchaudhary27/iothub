@@ -1,15 +1,19 @@
 package com.example.combtest;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.CameraX;
@@ -42,6 +46,8 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static android.content.pm.PackageManager.PERMISSION_DENIED;
 
 public class FirstFragment extends Fragment {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
@@ -132,5 +138,10 @@ public class FirstFragment extends Fragment {
         camera = cameraProvider.bindToLifecycle(this, cameraSelector,imageCapture, preview);
 
         preview.setSurfaceProvider(previewView.createSurfaceProvider(camera.getCameraInfo()));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
