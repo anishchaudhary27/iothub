@@ -85,10 +85,20 @@ public class FirstFragment extends Fragment implements OnMapReadyCallback, Googl
                                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                             DocumentSnapshot doc = task.getResult();
                                             GeoPoint geoPoint = (GeoPoint) doc.get("location");
+                                            String online = "Offline",state = "Off",mode = "Manual";
+                                            if(Integer.parseInt(doc.get("state").toString()) == 1) {
+                                                state = "On";
+                                            }
+                                            if(Integer.parseInt(doc.get("mode").toString()) == 1) {
+                                                mode = "Auto";
+                                            }
+                                            if(Integer.parseInt(doc.get("online").toString()) == 1) {
+                                                online = "Online";
+                                            }
                                             mMap.addMarker(new MarkerOptions().position(
                                                     new LatLng(geoPoint.getLatitude(),geoPoint.getLongitude()))
                                                     .title(doc.getId())
-                                                    .snippet("mode: "+ doc.get("mode") + "   state: " + doc.get("state") + "   online: " + doc.get("online")));
+                                                    .snippet("mode: "+ mode + "   state: " + state + "   conn: " + online));
                                         }
                                     });
                         }

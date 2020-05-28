@@ -62,11 +62,13 @@ public class OptionsFragment extends Fragment implements LocationListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             qrCode = getArguments().getString(ARG_QR);
         }
         db = FirebaseFirestore.getInstance();
         mFunctions = FirebaseFunctions.getInstance();
+
     }
 
     @Override
