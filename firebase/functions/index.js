@@ -109,7 +109,8 @@ exports.deployDevice = functions.https.onCall((data,context)=>{
   const installerId = context.auth.uid
   const db = admin.firestore()
   return db.collection('devices').doc(deviceId).update({
-    deploymentStatus: 1
+    deploymentStatus: 1,
+    active: 1
   })
   .then(v => {
     return db.collection('installers').doc(installerId).get()
@@ -126,7 +127,8 @@ exports.deployDevice = functions.https.onCall((data,context)=>{
   .catch(err=> {
     console.log(err)
     return db.collection('devices').doc(deviceId).update({
-      deploymentStatus: 0
+      deploymentStatus: 0,
+      active: 0
     })
     .then(v=>{
       return '0'
