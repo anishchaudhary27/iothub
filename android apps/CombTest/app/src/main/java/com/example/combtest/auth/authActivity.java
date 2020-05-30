@@ -106,4 +106,9 @@ public class authActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
+    @Override
+    public void onBackPressed() {
+
+    }
 }
