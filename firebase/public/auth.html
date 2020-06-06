@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css"
+    />
+    <script src="/__/firebase/7.15.0/firebase-app.js"></script>
+    <script src="/__/firebase/7.15.0/firebase-auth.js"></script>
+    <script src="/__/firebase/7.15.0/firebase-firestore.js"></script>
+    <title>iothub auth</title>
+  </head>
+  <body>
+    <h1>Welcome to My Awesome App</h1>
+    <div id="firebaseui-auth-container"></div>
+    <div id="loader">Loading...</div>
+
+    <script>
+        var getParams = function (url) {
+      	var params = {};
+      	var parser = document.createElement('a');
+      	parser.href = url;
+      	var query = parser.search.substring(1);
+      	var vars = query.split('&');
+      	for (var i = 0; i < vars.length; i++) {
+      		var pair = vars[i].split('=');
+      		params[pair[0]] = decodeURIComponent(pair[1]);
+      	}
+      	return params;
+      };
+
+
+
+            var firebaseConfig = {
+              apiKey: "AIzaSyB1FIXXRmViBBMfziBSrVIkvUTq3a-B1Ps",
+              authDomain: "iot-hub-273405.firebaseapp.com",
+              databaseURL: "https://iot-hub-273405.firebaseio.com",
+              projectId: "iot-hub-273405",
+              storageBucket: "iot-hub-273405.appspot.com",
+              messagingSenderId: "1074032183940",
+              appId: "1:1074032183940:web:0e6a2e46fadbe497b810d1",
+              measurementId: "G-X551G94209",
+            };
+            firebase.initializeApp(firebaseConfig);
+            // Initialize the FirebaseUI Widget using Firebase.
+            var ui = new firebaseui.auth.AuthUI(firebase.auth());
+            var uiConfig = {
+              callbacks: {
+                signInSuccessWithAuthResult: function (authResult, redirectUrl) {
+                  var params = getParams(window.location.href)
+                  window.location.replace('https://oauth-redirect.googleusercontent.com/r/iot-hub-273405#access_token='+firebase.auth().currentUser.uid+'&token_type=bearer&state='+params.state)
+                  return false;
+                },
+                uiShown: function () {
+                  // The widget is rendered.
+                  // Hide the loader.
+                  document.getElementById("loader").style.display = "none";
+                },
+              },
+              // Will use popup for IDP Providers sign-in flow instead of the default, redirect.
+              signInFlow: "popup",
+              signInOptions: [
+                // Leave the lines as is for the providers you want to offer your users.
+                firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+                firebase.auth.EmailAuthProvider.PROVIDER_ID,
+              ],
+            };
+            // The start method will wait until the DOM is loaded.
+            ui.start("#firebaseui-auth-container", uiConfig);
+    </script>
+  </body>
+</html>

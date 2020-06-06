@@ -6,9 +6,12 @@ admin.initializeApp({
 })
 
 admin.messaging().send({
+    data:{
+        name:'anish'
+    },
     notification:{
         title: 'Good Morning!!',
-        body: 'Have a great day anish😃'
+        body: 'Have a great day Anish😃'
     },
     token:'eCn5icqEqQY:APA91bG2I-bYjQoo2mTeeeE83Q1wUk4YvCXfa9g1mgsQyPesAYMlGUvDiRy0gA44CNwZoIIoL9C_M3sItPgqb1M4j_EOtVE8dlh_GHqOUFkvfliHLxrUOfBKsCX05gDPDEwYzQl1WtmV'
 })
